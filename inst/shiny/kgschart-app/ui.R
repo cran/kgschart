@@ -5,10 +5,11 @@
 # http://shiny.rstudio.com
 #
 
-#if (!require(kgschart)) devtools::install_github('kota7/kgschart-r')
-#if (packageVersion('kgschart') < '1.2.2') devtools::install_github('kota7/kgschart-r')
 
 library(shiny)
+library(shinyjs)
+library(kgschart)
+
 
 shinyUI(fluidPage(
 
@@ -16,7 +17,7 @@ shinyUI(fluidPage(
   # https://gist.github.com/withr/8799489
   tagList(
     tags$head(
-      tags$link(rel="stylesheet", type="text/css",href="busy.css"),
+      tags$link(rel="stylesheet", type="text/css", href="busy.css"),
       tags$script(type="text/javascript", src = "busy.js")
     )
   ),
@@ -24,6 +25,7 @@ shinyUI(fluidPage(
       p("Please wait..."),
       img(src="ajaxloaderq.gif")
   ),
+  useShinyjs(),
 
   # Application title
   titlePanel("KGS Rank Graph Parser"),
@@ -31,11 +33,10 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
-      fileInput('input_file', 'Choose PNG File',
-                accept=c('image/png')),
+      fileInput('input_file', 'Choose an image file (PNG format)', accept=c('image/png')),
 
       div(style="display: inline-block; vertical-align:middle",
-          textInput('input_id', 'Or type in a player name')),
+          textInput('input_id', 'Or type in a player name', placeholder="CrazyStone")),
       div(style="display: inline-block;vertical-align:middle; width:10px",
           shiny::br()),
       div(style="display: inline-block; vertical-align:-30%;",
@@ -58,9 +59,24 @@ shinyUI(fluidPage(
       downloadButton('dl_btn', 'Download Data'),
 
       shiny::hr(),
-      shiny::a('Bug Report',
-        href='https://github.com/kota7/kgschart-r/issues',
-        target='_blank')
+      shiny::strong('Links'),
+      shiny::tags$ul(
+        shiny::tags$li(shiny::a('KGS Archives', target='_blank',
+                           href='http://www.gokgs.com/archives.jsp')),
+        shiny::tags$li(shiny::a('Bug Report', target='_blank',
+                           href='https://github.com/kota7/kgschart-r/issues')),
+        shiny::tags$li(shiny::a('kgschart package', target='_blank',
+                                href='https://kota7.github.io/kgschart-r/'))
+      ),
+
+
+      shiny::hr(),
+      textOutput('version_label'),
+      shiny::p('Copyright \ua9 2017 by ',
+               shiny::a('Kota Mori.', href='https://github.com/kota7/',
+                        target='_blank'),
+               shiny::br(),
+               'All rights reserved.')
     ),
 
 

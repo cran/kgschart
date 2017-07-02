@@ -5,16 +5,21 @@
 # http://shiny.rstudio.com
 #
 
-#if (!require(kgschart)) devtools::install_github('kota7/kgschart-r')
-#if (packageVersion('kgschart') < '1.2.2') devtools::install_github('kota7/kgschart-r')
 
 
 library(shiny)
+library(shinyjs)
 library(kgschart)
 
 
 shinyServer(function(input, output) {
+  disable('dl_btn')
 
+  output$version_label <- renderText({
+    # version equals the package version
+    # this is useful to check the deployment
+    paste('Version', packageVersion('kgschart'))
+  })
 
   RV <- reactiveValues(
     object = NULL, # store parsed object here
@@ -85,6 +90,8 @@ shinyServer(function(input, output) {
       if (is.null(rr) || length(rr) != 2) return("N/A")
       sprintf("%s ~ %s", rr[1], rr[2])
     })
+
+    enable('dl_btn')
   })
 
 
